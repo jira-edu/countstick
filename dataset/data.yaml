@@ -1,0 +1,5 @@
+Train: images/Train
+Validation: images/Validation
+names:
+  0: stick
+path: .
