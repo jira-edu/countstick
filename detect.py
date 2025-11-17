@@ -4,7 +4,7 @@ import cv2
 model = YOLO("/home/jiji/Desktop/best2.pt")
 
 
-image_path = "/home/jiji/Desktop/dataset/LINE_ALBUM_14112025_251115_1.jpg"
+image_path = "/home/jiji/Desktop/2025-11-17-130814.jpg"
 img = cv2.imread(image_path)
 
 results = model(img, conf=0.5)
@@ -20,7 +20,7 @@ for box in boxes:
     cls = int(box.cls[0])                   # คลาสวัตถุ
 
     # วาดกรอบ
-    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
 
 cv2.putText(
@@ -30,7 +30,7 @@ cv2.putText(
     cv2.FONT_HERSHEY_SIMPLEX,
     7.0,       # ขนาดฟอนต์
     (0, 0, 255),  # สีแดง (B,G,R)
-    15,         # ความหนาเส้น
+    12,         # ความหนาเส้น
     cv2.LINE_AA
 )
 
