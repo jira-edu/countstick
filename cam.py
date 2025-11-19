@@ -3,7 +3,7 @@ import cv2
 
 # --- 1. การกำหนดค่าเริ่มต้น ---
 # โหลดโมเดล YOLOv8 ของคุณ
-model = YOLO("/home/jiji/Desktop/best1.pt")
+model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2.pt")
 
 # เปิดกล้องเว็บแคม (0 คือ ID ของกล้องหลัก)
 cap = cv2.VideoCapture(2)
