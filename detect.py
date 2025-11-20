@@ -3,7 +3,6 @@ import cv2
 
 model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2.pt")
 
-
 image_path = "/home/jiji/Desktop/2025-11-19-201518.jpg"
 img = cv2.imread(image_path)
 
