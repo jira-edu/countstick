@@ -42,10 +42,12 @@ else:
     # cv2.destroyWindow("Splash")
 
 # โหลดโมเดล YOLO
-model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2-1.pt")
+model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v3.pt")
 
 # เปิดเว็บแคม
 cap = cv2.VideoCapture(2)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 if not cap.isOpened():
     print("Error: ไม่สามารถเปิดกล้องเว็บแคมได้")
     exit()
@@ -73,7 +75,7 @@ while True:
     if key == ord(' '):   # SPACE BAR ถูกกด
         
         # --- YOLO Detection ---
-        results = model(frame, conf=0.4, verbose=False)
+        results = model(frame, conf=0.5, verbose=False)
         if results:
             result = results[0]
             boxes = result.boxes
