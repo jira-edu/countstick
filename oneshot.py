@@ -3,7 +3,7 @@ import cv2
 import time
 
 # โหลดโมเดล YOLO
-model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2.pt")
+model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2-1.pt")
 
 # เปิดเว็บแคม
 cap = cv2.VideoCapture(2)
