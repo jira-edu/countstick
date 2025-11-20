@@ -1,7 +1,7 @@
 import os
 
 # ตั้งค่าโฟลเดอร์ที่ต้องการเปลี่ยนชื่อไฟล์
-folder_path = "/home/jiji/Documents/CountStick/dataset2/images/test"
+folder_path = "/home/jiji/Documents/CountStick/dataset3/labels/New Folder/"
 
 # อ่านไฟล์ทั้งหมดในโฟลเดอร์ (ไม่รวมโฟลเดอร์ย่อย)
 files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
@@ -13,7 +13,7 @@ files.sort()
 total = len(files)
 digits = len(str(total))
 
-for index, filename in enumerate(files, start=232):
+for index, filename in enumerate(files, start=359):
     # แปลง index เช่น 1 → 001
     new_name_number = str(index).zfill(digits)
 
