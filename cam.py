@@ -3,10 +3,12 @@ import cv2
 
 # --- 1. การกำหนดค่าเริ่มต้น ---
 # โหลดโมเดล YOLOv8 ของคุณ
-model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v2.pt")
+model = YOLO("/home/jiji/Documents/CountStick/trainedModel/best-v3.pt")
 
 # เปิดกล้องเว็บแคม (0 คือ ID ของกล้องหลัก)
 cap = cv2.VideoCapture(2)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
 # ตรวจสอบว่ากล้องเปิดสำเร็จหรือไม่
 if not cap.isOpened():
