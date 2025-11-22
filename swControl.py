@@ -7,6 +7,8 @@ import serial.tools.list_ports
 import numpy as np
 import sys, os
 
+price = 10
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -174,7 +176,7 @@ def imProcess():
 
     cv2.putText(
         frame,
-        f"Count: {count}",
+        f"Count: {count},  Price: {count*price}",
         (20, 80),
         cv2.FONT_HERSHEY_SIMPLEX,
         2.0,
