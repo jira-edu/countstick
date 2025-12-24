@@ -4,6 +4,7 @@ from time import sleep
 import cv2
 from picamera2 import Picamera2
 from datetime import datetime
+from ultralytics import YOLO
 
 # Initialize camera
 picam = Picamera2()
@@ -39,7 +40,7 @@ while True:
             sleep(0.1)
         
         print("เจอวัตถุ!", time_stamp())
-        
+
         while prox.is_pressed:
             sleep(0.2)
         print("วัตถุหายไป!")
