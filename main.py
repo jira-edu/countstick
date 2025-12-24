@@ -27,16 +27,19 @@ while True:
     if key == ord('q'):
         break
     
+    # Check proximity sensor
     if prox.is_pressed:
-        for _ in range(50):
+        # wait a moment to capture stable frames
+        for i in range(50):
             frame = picam.capture_array()
             cv2.imshow("CountStick", frame)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
             sleep(0.1)
-
+        
         print("เจอวัตถุ!", time_stamp())
+        
         while prox.is_pressed:
             sleep(0.2)
         print("วัตถุหายไป!")
