@@ -6,6 +6,8 @@ from picamera2 import Picamera2
 from datetime import datetime
 from ultralytics import YOLO
 
+model = YOLO("trainedModel/best-v3.pt")
+
 from tkinter import messagebox
 
 greenPrice = 5
@@ -29,6 +31,29 @@ def time_stamp():
     now = datetime.now()
     return now.strftime("%y%m%d-%H%M%S")
 
+def detectStick(frame):
+    results = model(frame, conf=0.5, verbose=False)
+    if results:
+        result = results[0]
+        boxes = result.boxes
+        count = len(boxes)
+    for box in boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        conf = box.conf[0]
+        cls = int(box.cls[0])
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+    cv2.putText(
+        frame,
+        f"Count: {count}",
+        (20, 80),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        2.0,
+        (0, 0, 255),
+        5,
+        cv2.LINE_AA
+    )
+    return frame
+
 while True:
     frame = picam.capture_array()
     cv2.imshow("CountStick", frame)
@@ -51,10 +76,16 @@ while True:
                 break
             sleep(0.1)
         
-        print("เจอวัตถุ!", time_stamp())
+        print("มาแล้ว")
+        frame = detectStick(frame)
+        print("เสร็จแล้ว")
 
         while prox.is_pressed:
-            sleep(0.2)
+            cv2.imshow("CountStick", frame)
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q'):
+                break
+            sleep(0.1)
         print("วัตถุหายไป!")
         sleep(1)
     sleep(0.1)
