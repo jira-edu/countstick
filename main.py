@@ -6,6 +6,14 @@ from picamera2 import Picamera2
 from datetime import datetime
 from ultralytics import YOLO
 
+from tkinter import messagebox
+
+greenPrice = 5
+redPrice = 10
+purplePrice = 20
+bluePrice = 30
+from lib import receipt
+
 # Initialize camera
 picam = Picamera2()
 camera_config = picam.create_preview_configuration(main={"size": (1920, 1080),"format": "RGB888"})
@@ -31,7 +39,10 @@ while True:
     # Check proximity sensor
     if prox.is_pressed:
         # wait a moment to capture stable frames
+        count_down = 6
         for i in range(50):
+            if (i % 10 == 0):
+                count_down+=1
             frame = picam.capture_array()
             cv2.imshow("CountStick", frame)
             key = cv2.waitKey(1) & 0xFF
