@@ -12,6 +12,7 @@ greenPrice = 5
 redPrice = 10
 purplePrice = 20
 bluePrice = 30
+promptPayNumber = "0926582873"
 from lib import receipt
 
 # Initialize camera
