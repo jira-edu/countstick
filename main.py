@@ -15,7 +15,7 @@ redPrice = 10
 purplePrice = 20
 bluePrice = 30
 promptPayNumber = "0926582873"
-from lib import receipt
+from lib import receipt, dominateColor
 
 # Initialize camera
 picam = Picamera2()
@@ -41,7 +41,13 @@ def detectStick(frame):
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         conf = box.conf[0]
         cls = int(box.cls[0])
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+        cropped_image = frame[y1:y2, x1:x2]
+        cv2.imwrite("temp.jpg", cropped_image)
+        stickColor = dominateColor.getColor('temp.jpg')
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (stickColor[2],stickColor[1],stickColor[0]), 2)
+        # cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
     cv2.putText(
         frame,
         f"Count: {count}",
@@ -68,8 +74,18 @@ while True:
         count_down = 6
         for i in range(50):
             if (i % 10 == 0):
-                count_down+=1
+                count_down-=1
             frame = picam.capture_array()
+            cv2.putText(
+                frame,
+                f"Countdown: {count_down}",
+                (20, 80),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                2.0,
+                (255, 0, 0),
+                5,
+                cv2.LINE_AA
+            )
             cv2.imshow("CountStick", frame)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
@@ -77,6 +93,7 @@ while True:
             sleep(0.1)
         
         print("มาแล้ว")
+        frame = picam.capture_array()
         frame = detectStick(frame)
         print("เสร็จแล้ว")
 
