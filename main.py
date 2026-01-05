@@ -10,6 +10,8 @@ model = YOLO("trainedModel/best-v3.pt")
 
 from tkinter import messagebox
 
+greenCount, redCount, purpleCount, blueCount = 0
+
 greenPrice = 5
 redPrice = 10
 purplePrice = 20
@@ -32,6 +34,9 @@ def time_stamp():
     return now.strftime("%y%m%d-%H%M%S")
 
 def detectStick(frame):
+    global greenCount, redCount, purpleCount, blueCount
+    greenCount, redCount, purpleCount, blueCount = 0
+
     results = model(frame, conf=0.5, verbose=False)
     if results:
         result = results[0]
@@ -43,14 +48,30 @@ def detectStick(frame):
         cls = int(box.cls[0])
 
         cropped_image = frame[y1:y2, x1:x2]
-        cv2.imwrite("temp.jpg", cropped_image)
-        stickColor = dominateColor.getColor('temp.jpg')
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (stickColor[2],stickColor[1],stickColor[0]), 2)
+        # cv2.imwrite("temp.jpg", cropped_image)
+        stickColor = dominateColor.getColor(cropped_image)
+        if stickColor == 'เขียว':
+            greenCount += 1
+            boxColor = (0,255,0)
+        elif stickColor == 'ม่วง':
+            purpleCount += 1
+            boxColor = (128,0,128)
+        elif stickColor == 'แดง':
+            redCount += 1
+            boxColor = (0,0,255)
+        elif stickColor == 'น้ำเงิน':
+            blueCount += 1
+            boxColor = (255,0,0)
+        else:
+            boxColor = (0,0,0)
+        
+        cv2.rectangle(frame, (x1, y1), (x2, y2), boxColor, 2)
         # cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
+    # show stick count each color
     cv2.putText(
         frame,
-        f"Count: {count}",
+        f"green:{greenCount}\npurple:{purpleCount}\nred:{redCount}\nblue:{blueCount}",
         (20, 80),
         cv2.FONT_HERSHEY_SIMPLEX,
         2.0,
