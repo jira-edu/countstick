@@ -40,7 +40,7 @@ def receipt_button():
     receipt.printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,greenCount,redCount,purpleCount,blueCount)
 
 from lib import button
-button.add_button(1800, 20, "images/receipt.png", receipt_button) 
+button.add_button(1800, 40, "images/receipt.png", receipt_button) 
 
 def time_stamp():
     now = datetime.now()
