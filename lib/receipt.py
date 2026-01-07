@@ -12,7 +12,7 @@ def getQr(amount):
     img = qrcode.generate_payload(promptPayNumber, amount)
     qrcode.to_file(img, "QRcode.png")
     imgresize = Image.open('QRcode.png')
-    imgresize = imgresize.resize((200, 200)) #ปรับขนาดไฟล์ภาพตามต้องการ
+    imgresize = imgresize.resize((200, 200))
     imgresize.save('QRcode.png')
 
 def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,purple=0,blue=0):
@@ -43,7 +43,6 @@ def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,p
     p.set(bold=False)
   
     p.textln(f"Soup {soupPrice} Baht\t1\t{soupPrice}")
-    # p.textln("Mala Soup\t"+"1"+"\t"+str(soupPrice))
     greenTotal = green*greenPrice
     if(green>0):
         p.textln(f"Green {greenPrice} Baht\t{green}\t{greenTotal}")

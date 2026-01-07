@@ -1,6 +1,6 @@
 import cv2
 
-buttons = []   # เก็บปุ่มทั้งหมด
+buttons = []
 
 def add_button(x, y, button_img_path, callback):
     btn = cv2.imread(button_img_path, cv2.IMREAD_UNCHANGED)
@@ -38,9 +38,3 @@ def mouse_click(event, x, y, flags, param):
         for b in buttons:
             if b["x1"] <= x <= b["x2"] and b["y1"] <= y <= b["y2"]:
                 b["callback"]()
-
-# def btn1_action():
-#     print("กดปุ่ม 1 แล้ว")
-
-# def btn2_action():
-#     print("กดปุ่ม 2 แล้ว")

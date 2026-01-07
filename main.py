@@ -75,7 +75,6 @@ def detectStick(frame):
         cls = int(box.cls[0])
 
         cropped_image = frame_mod[y1:y2, x1:x2]
-        # cv2.imwrite("temp.jpg", cropped_image)
         stickColor = dominateColor.getColor(cropped_image)
         if stickColor == 'เขียว':
             greenCount += 1
@@ -93,7 +92,6 @@ def detectStick(frame):
             boxColor = (0,0,0)
         
         cv2.rectangle(frame, (x1, y1), (x2, y2), boxColor, 2)
-        # cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
     # show stick count each color
     cv2.putText(
