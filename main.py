@@ -4,6 +4,7 @@ from time import sleep
 import cv2
 from picamera2 import Picamera2
 from datetime import datetime
+import subprocess
 from ultralytics import YOLO
 
 model = YOLO("trainedModel/countstick-model-b.pt")
@@ -39,8 +40,15 @@ prox = Button(25, pull_up=True)
 def receipt_button():
     receipt.printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,greenCount,redCount,purpleCount,blueCount)
 
+def power_button():
+    try:
+        subprocess.run(["sudo", "poweroff"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to shut down: {e}")
+
 from lib import button
-button.add_button(1800, 40, "images/receipt.png", receipt_button) 
+button.add_button(1700, 40, "images/receipt.png", receipt_button)
+button.add_button(1800, 40, "images/poweroff.png", power_button)
 
 def time_stamp():
     now = datetime.now()
