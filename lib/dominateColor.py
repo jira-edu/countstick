@@ -1,4 +1,5 @@
 from scipy import stats
+import cv2
 
 def hue_to_color_name(h):
     if (h >= 0 and h <= 10) or (h >= 170 and h <= 179):

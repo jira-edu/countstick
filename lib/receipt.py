@@ -3,6 +3,10 @@ import usb.core
 import usb.util
 from promptpay import qrcode
 from PIL import Image
+from tkinter import messagebox
+from datetime import datetime
+
+promptPayNumber = "0926582873"
 
 def getQr(amount):
     img = qrcode.generate_payload(promptPayNumber, amount)
@@ -11,7 +15,7 @@ def getQr(amount):
     imgresize = imgresize.resize((200, 200)) #ปรับขนาดไฟล์ภาพตามต้องการ
     imgresize.save('QRcode.png')
 
-def printOut(green=0,red=0,purple=0,blue=0):    
+def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,purple=0,blue=0):
 
     device = usb.core.find(idVendor=0x0483, idProduct=0x070b)
     if device is None:
@@ -24,7 +28,7 @@ def printOut(green=0,red=0,purple=0,blue=0):
     p = Usb(0x0483, 0x070b)
 
     p.set(align='center')
-    p.image("../images/logo.png", impl="bitImageColumn")
+    p.image("images/logo.png", impl="bitImageColumn")
     p.set(bold=True)
     p.text("COUNTSTICK MALA\n")
     p.textln("1/2 Moo 1, Nong Pling, Mueang,")
@@ -38,19 +42,20 @@ def printOut(green=0,red=0,purple=0,blue=0):
     p.textln("--------------------------------")
     p.set(bold=False)
   
-    p.textln("Mala Soup\t"+"1"+"\t"+str(soupPrice))
+    p.textln(f"Soup {soupPrice} Baht\t1\t{soupPrice}")
+    # p.textln("Mala Soup\t"+"1"+"\t"+str(soupPrice))
+    greenTotal = green*greenPrice
     if(green>0):
-        greenTotal = green*greenPrice
-        p.textln("Green stick\t"+str(green)+"\t"+str(greenTotal))
+        p.textln(f"Green {greenPrice} Baht\t{green}\t{greenTotal}")
+    redTotal = red*redPrice
     if(red>0):
-        redTotal = red*redPrice
-        p.textln("Red stick\t"+str(red)+"\t"+str(redTotal))
+        p.textln(f"Red {redPrice} Baht\t{red}\t{redTotal}")
+    purpleTotal = purple*purplePrice
     if(purple>0):
-        purpleTotal = purple*purplePrice
-        p.textln("Purple stick\t"+str(purple)+"\t"+str(purpleTotal))
+        p.textln(f"Purple {purplePrice} Baht\t{purple}\t{purpleTotal}")
+    blueTotal = blue*bluePrice
     if(blue>0):
-        blueTotal = blue*bluePrice
-        p.textln("Blue stick\t"+str(blue)+"\t"+str(blueTotal))
+        p.textln(f"Blue {bluePrice} Baht\t{blue}\t{blueTotal}")
     total = greenTotal+redTotal+purpleTotal+blueTotal
 
     p.set(bold=True)

@@ -6,18 +6,25 @@ from picamera2 import Picamera2
 from datetime import datetime
 from ultralytics import YOLO
 
-model = YOLO("trainedModel/best-v3.pt")
+model = YOLO("trainedModel/countstick-model-b.pt")
 
 from tkinter import messagebox
 
-greenCount, redCount, purpleCount, blueCount = 0
-
+beta = -55
+soupPrice = 39
 greenPrice = 5
 redPrice = 10
 purplePrice = 20
 bluePrice = 30
 promptPayNumber = "0926582873"
+
 from lib import receipt, dominateColor
+receipt.promptPayNumber = promptPayNumber
+
+greenCount = 0
+redCount = 0
+purpleCount = 0
+blueCount = 0
 
 # Initialize camera
 picam = Picamera2()
@@ -29,15 +36,27 @@ picam.set_controls({"AfMode": 2, "AfTrigger": 0})
 # Initialize proximity sensor
 prox = Button(25, pull_up=True)
 
+def receipt_button():
+    receipt.printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,greenCount,redCount,purpleCount,blueCount)
+
+from lib import button
+button.add_button(1800, 20, "images/receipt.png", receipt_button) 
+
 def time_stamp():
     now = datetime.now()
     return now.strftime("%y%m%d-%H%M%S")
 
 def detectStick(frame):
-    global greenCount, redCount, purpleCount, blueCount
-    greenCount, redCount, purpleCount, blueCount = 0
+    #drop brightness
+    frame_mod = cv2.convertScaleAbs(frame, alpha=1, beta=beta)
 
-    results = model(frame, conf=0.5, verbose=False)
+    global greenCount, redCount, purpleCount, blueCount
+    greenCount = 0
+    redCount = 0
+    purpleCount = 0
+    blueCount = 0
+
+    results = model(frame_mod, conf=0.5, verbose=False)
     if results:
         result = results[0]
         boxes = result.boxes
@@ -47,7 +66,7 @@ def detectStick(frame):
         conf = box.conf[0]
         cls = int(box.cls[0])
 
-        cropped_image = frame[y1:y2, x1:x2]
+        cropped_image = frame_mod[y1:y2, x1:x2]
         # cv2.imwrite("temp.jpg", cropped_image)
         stickColor = dominateColor.getColor(cropped_image)
         if stickColor == 'เขียว':
@@ -71,15 +90,18 @@ def detectStick(frame):
     # show stick count each color
     cv2.putText(
         frame,
-        f"green:{greenCount}\npurple:{purpleCount}\nred:{redCount}\nblue:{blueCount}",
+        f"green:{greenCount}, purple:{purpleCount}, red:{redCount}, blue:{blueCount}",
         (20, 80),
         cv2.FONT_HERSHEY_SIMPLEX,
-        2.0,
+        1.5,
         (0, 0, 255),
-        5,
+        3,
         cv2.LINE_AA
     )
     return frame
+
+cv2.namedWindow("CountStick")
+cv2.setMouseCallback("CountStick", button.mouse_click)
 
 while True:
     frame = picam.capture_array()
@@ -116,6 +138,7 @@ while True:
         print("มาแล้ว")
         frame = picam.capture_array()
         frame = detectStick(frame)
+        frame = button.draw_buttons(frame)
         print("เสร็จแล้ว")
 
         while prox.is_pressed:
@@ -123,6 +146,7 @@ while True:
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
+            
             sleep(0.1)
         print("วัตถุหายไป!")
         sleep(1)
