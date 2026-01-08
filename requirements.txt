@@ -1,3 +1,4 @@
+altgraph==0.17.5
 appdirs==1.4.4
 apt-listchanges==4.8
 argcomplete==3.6.3
@@ -112,6 +113,8 @@ pygame==2.6.1
 Pygments==2.18.0
 PyGObject==3.50.0
 pyinotify==0.9.6
+pyinstaller==6.17.0
+pyinstaller-hooks-contrib==2025.11
 PyJWT==2.10.1
 pylint==3.3.4
 PyMatting==1.1.14

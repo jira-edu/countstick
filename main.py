@@ -2,6 +2,7 @@ from gpiozero import Button
 from time import sleep
 
 import cv2
+import numpy as np
 from picamera2 import Picamera2
 from datetime import datetime
 import subprocess
@@ -14,13 +15,21 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+welcomeImg = cv2.imread(resource_path(os.path.join('images', 'Splash-screen.png')))
+cv2.imshow('Welcome', welcomeImg)
+cv2.setWindowProperty("Welcome", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+cv2.waitKey(2)
+
 from ultralytics import YOLO
 
 model = YOLO(resource_path(os.path.join('trainedModel', 'countstick-model-b.pt')))
 
 from tkinter import messagebox
 
+# image preprocess
+alpha = 1.1
 beta = -55
+gamma = 1.1
 
 soupPrice = 39
 greenPrice = 5
@@ -41,6 +50,7 @@ greenCount = 0
 redCount = 0
 purpleCount = 0
 blueCount = 0
+unknowCount = 0
 
 # Initialize camera
 picam = Picamera2()
@@ -63,7 +73,7 @@ def power_button():
 
 from lib import button
 
-button.add_button(1700, 40, resource_path(os.path.join('images', 'receipt.png')), receipt_button)
+button.add_button(1680, 40, resource_path(os.path.join('images', 'receipt.png')), receipt_button)
 button.add_button(1800, 40, resource_path(os.path.join('images', 'poweroff.png')), power_button)
 
 def time_stamp():
@@ -72,13 +82,13 @@ def time_stamp():
 
 def detectStick(frame):
     #drop brightness
-    frame_mod = cv2.convertScaleAbs(frame, alpha=1, beta=beta)
+    frame_mod = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+    #gamma setting
+    inv = 1.0 / gamma
+    table = np.array([(i / 255.0) ** inv * 255 for i in range(256)]).astype("uint8")
+    frame_mod = cv2.LUT(frame_mod, table)
 
-    global greenCount, redCount, purpleCount, blueCount
-    greenCount = 0
-    redCount = 0
-    purpleCount = 0
-    blueCount = 0
+    global greenCount, redCount, purpleCount, blueCount, unknowCount
 
     results = model(frame_mod, conf=0.5, verbose=False)
     if results:
@@ -105,6 +115,7 @@ def detectStick(frame):
             blueCount += 1
             boxColor = (255,0,0)
         else:
+            unknowCount += 1
             boxColor = (0,0,0)
         
         cv2.rectangle(frame, (x1, y1), (x2, y2), boxColor, 2)
@@ -112,17 +123,20 @@ def detectStick(frame):
     # show stick count each color
     cv2.putText(
         frame,
-        f"green:{greenCount}, purple:{purpleCount}, red:{redCount}, blue:{blueCount}",
+        f"Green:{greenCount}, Purple:{purpleCount}, Red:{redCount}, Blue:{blueCount}, Unknow:{unknowCount}",
         (20, 80),
         cv2.FONT_HERSHEY_SIMPLEX,
         1.5,
-        (0, 0, 255),
-        3,
+        (255, 255, 255),
+        2,
         cv2.LINE_AA
     )
     return frame
 
+cv2.destroyWindow("Welcome")
+
 cv2.namedWindow("CountStick")
+cv2.setWindowProperty("CountStick", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.setMouseCallback("CountStick", button.mouse_click)
 
 while True:
@@ -148,8 +162,8 @@ while True:
                 (20, 80),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 2.0,
-                (255, 0, 0),
-                5,
+                (255, 255, 255),
+                3,
                 cv2.LINE_AA
             )
             cv2.imshow("CountStick", frame)
@@ -176,6 +190,7 @@ while True:
         redCount = 0
         purpleCount = 0
         blueCount = 0
+        unknowCount = 0
         sleep(1)
     sleep(0.1)
 

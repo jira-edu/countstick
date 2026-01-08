@@ -11,10 +11,10 @@ def hue_to_color_name(h):
     elif 36 <= h <= 85:
         return "เขียว"
     elif 86 <= h <= 100:
-        return "ฟ้า"
-    elif 101 <= h <= 130:
         return "น้ำเงิน"
-    elif 131 <= h <= 160:
+    elif 101 <= h <= 134:
+        return "น้ำเงิน"
+    elif 135 <= h <= 160:
         return "ม่วง"
     elif 161 <= h <= 169:
         return "ชมพู"
