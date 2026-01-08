@@ -5,13 +5,23 @@ import cv2
 from picamera2 import Picamera2
 from datetime import datetime
 import subprocess
+
+import sys, os
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 from ultralytics import YOLO
 
-model = YOLO("trainedModel/countstick-model-b.pt")
+model = YOLO(resource_path(os.path.join('trainedModel', 'countstick-model-b.pt')))
 
 from tkinter import messagebox
 
 beta = -55
+
 soupPrice = 39
 greenPrice = 5
 redPrice = 10
@@ -21,6 +31,11 @@ promptPayNumber = "0926582873"
 
 from lib import receipt, dominateColor
 receipt.promptPayNumber = promptPayNumber
+receipt.soupPrice = soupPrice
+receipt.greenPrice = greenPrice
+receipt.redPrice = redPrice
+receipt.purplePrice = purplePrice
+receipt.bluePrice = bluePrice
 
 greenCount = 0
 redCount = 0
@@ -38,7 +53,7 @@ picam.set_controls({"AfMode": 2, "AfTrigger": 0})
 prox = Button(25, pull_up=True)
 
 def receipt_button():
-    receipt.printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,greenCount,redCount,purpleCount,blueCount)
+    receipt.printOut(greenCount,redCount,purpleCount,blueCount)
 
 def power_button():
     try:
@@ -47,8 +62,9 @@ def power_button():
         print(f"Failed to shut down: {e}")
 
 from lib import button
-button.add_button(1700, 40, "images/receipt.png", receipt_button)
-button.add_button(1800, 40, "images/poweroff.png", power_button)
+
+button.add_button(1700, 40, resource_path(os.path.join('images', 'receipt.png')), receipt_button)
+button.add_button(1800, 40, resource_path(os.path.join('images', 'poweroff.png')), power_button)
 
 def time_stamp():
     now = datetime.now()
@@ -111,6 +127,7 @@ cv2.setMouseCallback("CountStick", button.mouse_click)
 
 while True:
     frame = picam.capture_array()
+    frame = button.draw_buttons(frame)
     cv2.imshow("CountStick", frame)
 
     key = cv2.waitKey(1) & 0xFF
@@ -155,6 +172,10 @@ while True:
             
             sleep(0.1)
         print("วัตถุหายไป!")
+        greenCount = 0
+        redCount = 0
+        purpleCount = 0
+        blueCount = 0
         sleep(1)
     sleep(0.1)
 

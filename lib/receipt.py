@@ -5,18 +5,33 @@ from promptpay import qrcode
 from PIL import Image
 from tkinter import messagebox
 from datetime import datetime
+import sys, os
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
+soupPrice = 0
+greenPrice = 0
+redPrice = 0
+purplePrice = 0
+bluePrice = 0
 promptPayNumber = "0926582873"
 
 def getQr(amount):
     img = qrcode.generate_payload(promptPayNumber, amount)
-    qrcode.to_file(img, "QRcode.png")
-    imgresize = Image.open('QRcode.png')
+    qrcode.to_file(img, resource_path(os.path.join('images', 'QRcode.png')))
+    imgresize = Image.open(resource_path(os.path.join('images', 'QRcode.png')))
     imgresize = imgresize.resize((200, 200))
-    imgresize.save('QRcode.png')
+    imgresize.save(resource_path(os.path.join('images', 'QRcode.png')))
 
-def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,purple=0,blue=0):
-
+def printOut(green=0,red=0,purple=0,blue=0):
+    if (green==0 and red==0 and purple==0 and blue==0):
+        messagebox.showerror("ข้อผิดพลาด", f"ไม่พบจำนวนไม้หม่าล่า")
+        return
+    
     device = usb.core.find(idVendor=0x0483, idProduct=0x070b)
     if device is None:
         messagebox.showerror("ข้อผิดพลาด", f"ไม่สามารถเชื่อมต่อเครื่องพิมพ์ใบเสร็จ USB ได้")
@@ -28,7 +43,7 @@ def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,p
     p = Usb(0x0483, 0x070b)
 
     p.set(align='center')
-    p.image("images/logo.png", impl="bitImageColumn")
+    p.image(resource_path(os.path.join('images', 'logo.png')), impl="bitImageColumn")
     p.set(bold=True)
     p.text("COUNTSTICK MALA\n")
     p.textln("1/2 Moo 1, Nong Pling, Mueang,")
@@ -65,7 +80,7 @@ def printOut(soupPrice,greenPrice,redPrice,purplePrice,bluePrice,green=0,red=0,p
 
     p.set(align='center')
     p.textln("--------------------------------")
-    p.image("QRcode.png", impl="bitImageColumn")    
+    p.image(resource_path(os.path.join('images', 'QRcode.png')), impl="bitImageColumn")    
     p.textln("THANK YOU!")
     p.cut()
     p.close()
