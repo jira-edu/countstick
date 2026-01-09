@@ -16,8 +16,8 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 welcomeImg = cv2.imread(resource_path(os.path.join('images', 'Splash-screen.png')))
-cv2.imshow('Welcome', welcomeImg)
-cv2.setWindowProperty("Welcome", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+cv2.imshow('CountStick', welcomeImg)
+cv2.setWindowProperty("CountStick", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.waitKey(2)
 
 from ultralytics import YOLO
@@ -133,10 +133,9 @@ def detectStick(frame):
     )
     return frame
 
-cv2.destroyWindow("Welcome")
 
-cv2.namedWindow("CountStick")
-cv2.setWindowProperty("CountStick", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+# cv2.namedWindow("CountStick")
+# cv2.setWindowProperty("CountStick", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.setMouseCallback("CountStick", button.mouse_click)
 
 while True:
