@@ -1,0 +1,1 @@
+pyinstaller --onefile --add-data "images:images" --add-data "trainedModel:trainedModel" --add-data "lib:lib" --add-data "/home/admin/countstick-env/lib/python3.13/site-packages/escpos/capabilities.json:escpos" --hidden-import gpiozero.pins.rpigpio --hidden-import gpiozero.pins.lgpio --hidden-import gpiozero.pins.native main.py
