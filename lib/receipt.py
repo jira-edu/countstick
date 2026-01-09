@@ -6,6 +6,8 @@ from PIL import Image
 from tkinter import messagebox
 from datetime import datetime
 import sys, os
+from time import sleep
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -24,7 +26,7 @@ def getQr(amount):
     img = qrcode.generate_payload(promptPayNumber, amount)
     qrcode.to_file(img, resource_path(os.path.join('images', 'QRcode.png')))
     imgresize = Image.open(resource_path(os.path.join('images', 'QRcode.png')))
-    imgresize = imgresize.resize((200, 200))
+    imgresize = imgresize.resize((250, 250))
     imgresize.save(resource_path(os.path.join('images', 'QRcode.png')))
 
 def printOut(green=0,red=0,purple=0,blue=0):
@@ -44,7 +46,11 @@ def printOut(green=0,red=0,purple=0,blue=0):
 
     p.set(align='center')
     p.image(resource_path(os.path.join('images', 'logo.png')), impl="bitImageColumn")
+    
     p.set(bold=True)
+    sleep(0.2)
+    p.set(align='center')
+    sleep(0.2)
     p.text("COUNTSTICK MALA\n")
     p.textln("1/2 Moo 1, Nong Pling, Mueang,")
     p.textln("Kamphaeng Phet 62000")
@@ -80,6 +86,7 @@ def printOut(green=0,red=0,purple=0,blue=0):
 
     p.set(align='center')
     p.textln("--------------------------------")
+    p.textln("QR Payment")
     p.image(resource_path(os.path.join('images', 'QRcode.png')), impl="bitImageColumn")    
     p.textln("THANK YOU!")
     p.cut()
