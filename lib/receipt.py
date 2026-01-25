@@ -22,6 +22,18 @@ purplePrice = 0
 bluePrice = 0
 promptPayNumber = "0926582873"
 
+def qrTotal(green=0,red=0,purple=0,blue=0):
+    if (green==0 and red==0 and purple==0 and blue==0):
+        messagebox.showerror("ข้อผิดพลาด", f"ไม่พบจำนวนไม้หม่าล่า")
+        return
+    greenTotal = green*greenPrice
+    redTotal = red*redPrice
+    purpleTotal = purple*purplePrice
+    blueTotal = blue*bluePrice
+    total = soupPrice+greenTotal+redTotal+purpleTotal+blueTotal
+    img = qrcode.generate_payload(promptPayNumber, total)
+    qrcode.to_file(img, resource_path(os.path.join('images', 'QRcode.png')))
+
 def getQr(amount):
     img = qrcode.generate_payload(promptPayNumber, amount)
     qrcode.to_file(img, resource_path(os.path.join('images', 'QRcode.png')))

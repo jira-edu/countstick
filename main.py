@@ -25,6 +25,8 @@ from ultralytics import YOLO
 model = YOLO(resource_path(os.path.join('trainedModel', 'countstick-model-b.pt')))
 
 from tkinter import messagebox
+import tkinter as tk
+from PIL import Image, ImageTk
 
 # image preprocess
 alpha = 1.1
@@ -62,9 +64,25 @@ picam.set_controls({"AfMode": 2, "AfTrigger": 0})
 # Initialize proximity sensor
 prox = Button(25, pull_up=True)
 
-def qr_button():
-    
+qr_show = False
 
+def draw_qr(f):
+    image = cv2.imread(resource_path(os.path.join('images', 'QRcode.png')))
+    bh, bw = f.shape[:2]
+    fh, fw = image.shape[:2]
+    x = (bw - fw) // 2
+    y = (bh - fh) // 2
+    f[y:y+fh, x:x+fw] = image
+    return f
+
+def qr_button():
+    global qr_show
+    receipt.qrTotal(greenCount,redCount,purpleCount,blueCount)
+    if qr_show == False:
+        qr_show = True
+    else:
+        qr_show = False
+    
 def receipt_button():
     receipt.printOut(greenCount,redCount,purpleCount,blueCount)
 
@@ -182,13 +200,17 @@ while True:
         print("เสร็จแล้ว")
 
         while prox.is_pressed:
-            cv2.imshow("CountStick", frame)
+            frame_display = frame.copy()
+            if qr_show == True:
+                frame_display = draw_qr(frame_display)
+
+            cv2.imshow("CountStick", frame_display)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
-            
             sleep(0.1)
         print("วัตถุหายไป!")
+        qr_show = False
         greenCount = 0
         redCount = 0
         purpleCount = 0
