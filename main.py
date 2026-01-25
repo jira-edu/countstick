@@ -62,6 +62,9 @@ picam.set_controls({"AfMode": 2, "AfTrigger": 0})
 # Initialize proximity sensor
 prox = Button(25, pull_up=True)
 
+def qr_button():
+    
+
 def receipt_button():
     receipt.printOut(greenCount,redCount,purpleCount,blueCount)
 
@@ -73,6 +76,7 @@ def power_button():
 
 from lib import button
 
+button.add_button(1560, 40, resource_path(os.path.join('images', 'pay.png')), qr_button)
 button.add_button(1680, 40, resource_path(os.path.join('images', 'receipt.png')), receipt_button)
 button.add_button(1800, 40, resource_path(os.path.join('images', 'poweroff.png')), power_button)
 

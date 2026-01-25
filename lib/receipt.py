@@ -76,7 +76,7 @@ def printOut(green=0,red=0,purple=0,blue=0):
     blueTotal = blue*bluePrice
     if(blue>0):
         p.textln(f"Blue {bluePrice} Baht\t{blue}\t{blueTotal}")
-    total = greenTotal+redTotal+purpleTotal+blueTotal
+    total = soupPrice+greenTotal+redTotal+purpleTotal+blueTotal
 
     p.set(bold=True)
     p.textln("--------------------------------")
